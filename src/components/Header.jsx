@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Search, MapPin, User, LogOut } from 'lucide-react';
+import { Menu, Search, MapPin, User, LogOut, Accessibility } from 'lucide-react';
+import { Link } from 'react-router-dom'; // ✅ Import Link
 import { useAuth } from '../contexts/AuthContext';
 import AuthModal from './AuthModal';
 import NotificationBell from './NotificationBell';
@@ -11,13 +12,8 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -50,7 +46,7 @@ const Header = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className={`hidden md items-center rounded-full px-4 py-2 transition-all duration-300 ${
               isScrolled ? 'bg-gray-100' : 'bg-white/90'
             }`}>
@@ -61,7 +57,7 @@ const Header = () => {
                 className="bg-transparent outline-none w-64"
               />
             </div>
-            
+
             <nav className="flex items-center space-x-5">
               <button className={`hidden md items-center transition-colors duration-300 ${
                 isScrolled ? 'text-gray-800' : 'text-white'
@@ -69,9 +65,19 @@ const Header = () => {
                 <MapPin className="w-5 h-5 mr-1" />
                 <span className="text-sm">Nearby</span>
               </button>
-              
+
+              <Link
+                to="/accessibility"
+                className={`flex items-center text-sm font-medium transition-colors duration-300 ${
+                  isScrolled ? 'text-gray-800' : 'text-white'
+                }`}
+              >
+                <Accessibility className="w-5 h-5 mr-1" />
+                Accessibility
+              </Link>
+
               <NotificationBell />
-              
+
               <button 
                 onClick={handleAuthClick}
                 className={`flex items-center transition-colors duration-300 ${
@@ -84,7 +90,7 @@ const Header = () => {
                   <User className="w-5 h-5" />
                 )}
               </button>
-              
+
               <button className={`md transition-colors duration-300 ${
                 isScrolled ? 'text-gray-800' : 'text-white'
               }`}>

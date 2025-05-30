@@ -9,7 +9,7 @@ const ReservationModal = ({ food, isOpen, onClose, onSuccess }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     quantity: 1,
-    pickup_time: format(new Date(Date.now() + 2 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH"),
+    pickup_time: format(new Date(Date.now() + 2 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm"),
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,38 +24,47 @@ const ReservationModal = ({ food, isOpen, onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
     if (!user) {
       toast.error('Please sign in to reserve.');
-      setLoading(false);
       return;
     }
 
-    try {
-      console.log({
-        user_id: user?.id,
-        food_id: food?.id,
-        quantity: formData.quantity,
-        pickup_time: formData.pickup_time
-      });
+    if (!food?.id) {
+      toast.error('Invalid food item.');
+      return;
+    }
 
-      const { error } = await supabase.from('reservations').insert({
+    setLoading(true);
+    toast.loading('Processing reservation...');
+
+    try {
+      const insertPayload = {
         user_id: user.id,
         food_id: food.id,
         quantity: formData.quantity,
         pickup_time: new Date(formData.pickup_time).toISOString(),
         status: 'pending',
-      });
+      };
+
+      console.log('Insert payload:', insertPayload);
+
+      const { data, error } = await supabase
+        .from('reservations')
+        .insert(insertPayload)
+        .select();
 
       if (error) throw error;
 
+      console.log('Inserted reservation:', data);
+      toast.dismiss();
       toast.success('Reservation successful!');
       onSuccess?.();
       onClose();
     } catch (err) {
-      console.error("Supabase error:", err);
-      toast.error(`Reservation failed: ${err.message || 'unknown error'}`);
+      console.error('Supabase error:', err);
+      toast.dismiss();
+      toast.error(`Reservation failed: ${err.message || 'Unknown error'}`);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -97,7 +106,9 @@ const ReservationModal = ({ food, isOpen, onClose, onSuccess }) => {
               >
                 -
               </button>
-              <span className="mx-4 font-medium text-gray-900 dark:text-white">{formData.quantity}</span>
+              <span className="mx-4 font-medium text-gray-900 dark:text-white">
+                {formData.quantity}
+              </span>
               <button
                 type="button"
                 onClick={() => handleQuantityChange(1)}
@@ -117,9 +128,11 @@ const ReservationModal = ({ food, isOpen, onClose, onSuccess }) => {
               <input
                 type="datetime-local"
                 value={formData.pickup_time}
-                onChange={(e) => setFormData({ ...formData, pickup_time: e.target.value })}
-                min={format(new Date(), "yyyy-MM-dd'T'HH")}
-                max={format(new Date(food.expiresAt), "yyyy-MM-dd'T'HH")}
+                onChange={(e) =>
+                  setFormData({ ...formData, pickup_time: e.target.value })
+                }
+                min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                max={format(new Date(food.expiresAt), "yyyy-MM-dd'T'HH:mm")}
                 className="pl-10 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-700 dark:text-white"
               />
             </div>

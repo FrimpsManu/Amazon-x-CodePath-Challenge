@@ -14,6 +14,7 @@ import ImpactPage from './pages/ImpactPage';
 import CareersPage from './pages/CareersPage';
 import PressPage from './pages/PressPage';
 import ContactPage from './pages/ContactPage';
+import AccessibilitySettings from './pages/AccessibilitySettings'; 
 import { AuthProvider } from './contexts/AuthContext';
 import { RealtimeProvider } from './contexts/RealtimeContext';
 
@@ -37,6 +38,7 @@ function App() {
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/press" element={<PressPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/accessibility" element={<AccessibilitySettings />} /> {/* ✅ Add this route */}
           </Routes>
         </RealtimeProvider>
       </AuthProvider>
