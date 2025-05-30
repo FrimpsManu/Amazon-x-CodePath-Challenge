@@ -110,3 +110,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.contrast-high {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.text-xl {
+  font-size: 1.25rem !important;
+}
