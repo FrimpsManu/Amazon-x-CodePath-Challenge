@@ -15,36 +15,45 @@ import CareersPage from './pages/CareersPage';
 import PressPage from './pages/PressPage';
 import ContactPage from './pages/ContactPage';
 import AccessibilitySettings from './pages/AccessibilitySettings';
+
 import { AuthProvider } from './contexts/AuthContext';
 import { RealtimeProvider } from './contexts/RealtimeContext';
-import { AccessibilityProvider } from './contexts/AccessibilityContext'; // ✅ Import the provider
+import { AccessibilityProvider } from './contexts/AccessibilityContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+
+import Chatbot from './components/Chatbot'; // ✅ Import the chatbot
 
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <RealtimeProvider>
-          <AccessibilityProvider> {/* ✅ Wrap the whole app */}
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/how-it-works" element={<HowItWorksPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/food-safety" element={<FoodSafetyPage />} />
-              <Route path="/join-as-provider" element={<JoinProviderPage />} />
-              <Route path="/business-benefits" element={<BusinessBenefitsPage />} />
-              <Route path="/success-stories" element={<SuccessStoriesPage />} />
-              <Route path="/tax-benefits" element={<TaxBenefitsPage />} />
-              <Route path="/partner-resources" element={<PartnerResourcesPage />} />
-              <Route path="/mission" element={<MissionPage />} />
-              <Route path="/impact" element={<ImpactPage />} />
-              <Route path="/careers" element={<CareersPage />} />
-              <Route path="/press" element={<PressPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/accessibility" element={<AccessibilitySettings />} />
-            </Routes>
-          </AccessibilityProvider>
-        </RealtimeProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <RealtimeProvider>
+            <AccessibilityProvider>
+              <>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/how-it-works" element={<HowItWorksPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/food-safety" element={<FoodSafetyPage />} />
+                  <Route path="/join-as-provider" element={<JoinProviderPage />} />
+                  <Route path="/business-benefits" element={<BusinessBenefitsPage />} />
+                  <Route path="/success-stories" element={<SuccessStoriesPage />} />
+                  <Route path="/tax-benefits" element={<TaxBenefitsPage />} />
+                  <Route path="/partner-resources" element={<PartnerResourcesPage />} />
+                  <Route path="/mission" element={<MissionPage />} />
+                  <Route path="/impact" element={<ImpactPage />} />
+                  <Route path="/careers" element={<CareersPage />} />
+                  <Route path="/press" element={<PressPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/accessibility" element={<AccessibilitySettings />} />
+                </Routes>
+                <Chatbot /> {/* ✅ Always visible on all pages */}
+              </>
+            </AccessibilityProvider>
+          </RealtimeProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

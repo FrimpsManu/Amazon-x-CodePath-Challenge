@@ -5,10 +5,19 @@ import { useTheme } from '../contexts/ThemeContext';
 const ThemeToggle = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
 
+  // Ensure body class is updated when isDarkMode changes
+  React.useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   return (
     <button
       onClick={toggleDarkMode}
-      className="p-2 rounded-lg transition-colors hover-gray-100 dark-gray-800"
+      className="p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
       aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDarkMode ? (

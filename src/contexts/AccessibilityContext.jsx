@@ -14,23 +14,32 @@ export const AccessibilityProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const {
-        data,
-        error
-      } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', supabase.auth.user()?.id)
-        .single();
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      if (data) setSettings(data);
-      if (error) console.warn('Accessibility settings fetch failed:', error.message);
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('user_settings')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error) {
+          console.warn('Accessibility settings fetch failed:', error.message);
+        } else if (data) {
+          setSettings(data);
+        }
+      } catch (err) {
+        console.error('Unexpected error fetching accessibility settings:', err.message);
+      }
     };
 
     fetchSettings();
   }, []);
 
-  // Apply styles globally via a wrapper div
   const wrapperClass = `
     ${settings.highContrast ? 'contrast-high' : ''}
     ${settings.largeText ? 'text-xl' : ''}
@@ -44,4 +53,5 @@ export const AccessibilityProvider = ({ children }) => {
     </AccessibilityContext.Provider>
   );
 };
+
 export default AccessibilityContext;

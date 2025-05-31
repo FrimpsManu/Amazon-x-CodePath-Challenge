@@ -35,6 +35,8 @@ CREATE TABLE food_items (
   quantity integer NOT NULL DEFAULT 0 CHECK (quantity >= 0),
   expires_at timestamptz NOT NULL,
   provider_id uuid REFERENCES providers(id) ON DELETE CASCADE,
+  video_url text, -- ✅ NEW: cooking tutorial video link
+  instructions text[], -- ✅ NEW: array of preparation steps
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );

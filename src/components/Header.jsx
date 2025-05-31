@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Search, MapPin, User, LogOut, Accessibility } from 'lucide-react';
-import { Link } from 'react-router-dom'; // ✅ Import Link
+import { Menu, Search, MapPin, User, LogOut, Accessibility, Moon, Sun } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext'; // ✅ Import useTheme
 import AuthModal from './AuthModal';
 import NotificationBell from './NotificationBell';
 
@@ -9,6 +10,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, signOut } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useTheme(); // ✅ Use theme context
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,6 +77,17 @@ const Header = () => {
                 <Accessibility className="w-5 h-5 mr-1" />
                 Accessibility
               </Link>
+
+              {/* ✅ Dark mode toggle button */}
+              <button
+                onClick={toggleDarkMode}
+                className={`flex items-center transition-colors duration-300 ${
+                  isScrolled ? 'text-gray-800' : 'text-white'
+                }`}
+                title="Toggle Dark Mode"
+              >
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
 
               <NotificationBell />
 
